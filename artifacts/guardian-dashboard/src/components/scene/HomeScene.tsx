@@ -15,6 +15,7 @@ import ElectricalPanel from './ElectricalPanel';
 import RoomLightFixture from './RoomLightFixture';
 import SceneSimControls from './SceneSimControls';
 import { useGuardianStore } from '@/lib/guardian-state';
+import { IoTSensorBeacon, GlowingConduitPath } from './HazardSafeguardEffects';
 
 const WALL_COLOR = '#1c2230';     // deep slate — solid dark with strong specular bounce
 const WALL_ACCENT = '#161b27';    // even deeper for the dividing wall
@@ -231,6 +232,9 @@ function HouseStructure() {
 export default function HomeScene() {
   const showAxes = useGuardianStore((s) => s.showAxes);
   const toggleAxes = useGuardianStore((s) => s.toggleAxes);
+  const gasStatus = useGuardianStore((s) => s.gasStatus);
+  const waterStatus = useGuardianStore((s) => s.waterStatus);
+  const electricityStatus = useGuardianStore((s) => s.electricityStatus);
   const [showHouse, setShowHouse] = useState(true);
   const [autoRotate, setAutoRotate] = useState(true);
   const controlsRef = useRef<OrbitControlsLike | null>(null);
@@ -254,23 +258,23 @@ export default function HomeScene() {
 
   return (
     <div className="absolute inset-0">
-      {/* Floating viewport controls (Blender-style) */}
-      <div className="absolute top-3 right-3 z-10 flex flex-col gap-2">
+      {/* Floating viewport controls (Glass pills) */}
+      <div className="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
         <button
           onClick={() => setAutoRotate((v) => !v)}
-          className={`flex items-center gap-2 px-3 py-2 rounded-md text-xs font-mono uppercase tracking-wider border backdrop-blur-md transition-colors ${
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium border backdrop-blur-xl transition-all shadow-lg cursor-pointer ${
             !autoRotate
-              ? 'bg-amber-500/20 border-amber-500/60 text-amber-300'
-              : 'bg-black/40 border-white/10 text-white/70 hover:text-white hover:border-white/20'
+              ? 'bg-amber-500/20 border-amber-500/40 text-amber-300'
+              : 'bg-zinc-950/60 border-white/10 text-white/80 hover:text-white hover:border-white/20'
           }`}
-          title={autoRotate ? 'Pause camera rotation — free look mode' : 'Resume auto-rotate'}
+          title={autoRotate ? 'Pause camera rotation' : 'Resume auto-rotate'}
         >
           {autoRotate ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
           <span className="hidden sm:inline">{autoRotate ? 'Pause' : 'Auto'}</span>
         </button>
         <button
           onClick={recenterCamera}
-          className="flex items-center gap-2 px-3 py-2 rounded-md text-xs font-mono uppercase tracking-wider border backdrop-blur-md transition-colors bg-black/40 border-white/10 text-white/70 hover:text-white hover:border-white/20"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium border border-white/10 bg-zinc-950/60 backdrop-blur-xl text-white/80 hover:text-white hover:border-white/20 shadow-lg transition-all cursor-pointer"
           title="Recenter camera to default view"
         >
           <Crosshair className="w-3.5 h-3.5" />
@@ -278,10 +282,10 @@ export default function HomeScene() {
         </button>
         <button
           onClick={toggleAxes}
-          className={`flex items-center gap-2 px-3 py-2 rounded-md text-xs font-mono uppercase tracking-wider border backdrop-blur-md transition-colors ${
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium border backdrop-blur-xl transition-all shadow-lg cursor-pointer ${
             showAxes
-              ? 'bg-primary/20 border-primary/60 text-primary'
-              : 'bg-black/40 border-white/10 text-white/70 hover:text-white hover:border-white/20'
+              ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
+              : 'bg-zinc-950/60 border-white/10 text-white/80 hover:text-white hover:border-white/20'
           }`}
           title="Toggle axis & grid view"
         >
@@ -290,26 +294,26 @@ export default function HomeScene() {
         </button>
         <button
           onClick={() => setShowHouse((v) => !v)}
-          className={`flex items-center gap-2 px-3 py-2 rounded-md text-xs font-mono uppercase tracking-wider border backdrop-blur-md transition-colors ${
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium border backdrop-blur-xl transition-all shadow-lg cursor-pointer ${
             !showHouse
-              ? 'bg-primary/20 border-primary/60 text-primary'
-              : 'bg-black/40 border-white/10 text-white/70 hover:text-white hover:border-white/20'
+              ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
+              : 'bg-zinc-950/60 border-white/10 text-white/80 hover:text-white hover:border-white/20'
           }`}
-          title="Toggle house geometry"
+          title="Toggle house walls"
         >
           {showHouse ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
-          <span className="hidden sm:inline">House</span>
+          <span className="hidden sm:inline">Walls</span>
         </button>
       </div>
 
-      {/* Camera control hint — appears briefly when free-look is engaged */}
+      {/* Camera control hint */}
       {!autoRotate && (
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 px-3 py-1.5 rounded-md bg-black/60 border border-white/10 backdrop-blur-md text-[10px] font-mono uppercase tracking-wider text-white/70 hidden sm:flex gap-3">
-          <span>Drag · Orbit</span>
-          <span className="text-white/30">|</span>
-          <span>Right-click · Pan</span>
-          <span className="text-white/30">|</span>
-          <span>Scroll · Zoom</span>
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 px-3.5 py-1.5 rounded-full bg-zinc-950/70 border border-white/10 backdrop-blur-xl text-[11px] font-medium text-white/70 hidden sm:flex items-center gap-3 shadow-xl">
+          <span>Drag to Orbit</span>
+          <span className="text-white/20">|</span>
+          <span>Right-click to Pan</span>
+          <span className="text-white/20">|</span>
+          <span>Scroll to Zoom</span>
         </div>
       )}
 
@@ -369,6 +373,16 @@ export default function HomeScene() {
           <RoomLightFixture position={[1.5, 1.95, 0]} room="kitchen" />
           <GasValve position={[2.6, 1.05, -1.45]} />
           <WaterMain position={[1.0, 1.05, -1.45]} />
+
+          {/* Smart IoT Beacons */}
+          <IoTSensorBeacon position={[2.5, 1.45, -1.4]} label="Gas Sniffer" status={gasStatus} />
+          <IoTSensorBeacon position={[1.0, 1.45, -1.4]} label="Hydro Probe" status={waterStatus} />
+          <IoTSensorBeacon position={[-2.88, 1.7, 0.3]} label="Smart CT Sensor" status={electricityStatus} />
+
+          {/* Glowing Utility Flow Conduits */}
+          <GlowingConduitPath position={[2.55, 0.2, -1.45]} args={[0.3, 0.03, 0.03]} color="#f59e0b" status={gasStatus} />
+          <GlowingConduitPath position={[1.0, 0.2, -1.35]} args={[0.03, 0.03, 0.35]} color="#06b6d4" status={waterStatus} />
+          <GlowingConduitPath position={[-2.88, 0.05, 0.3]} args={[0.02, 0.02, 0.8]} color="#10b981" status={electricityStatus} />
 
           <ContactShadows position={[0, 0.01, 0]} opacity={0.4} scale={12} blur={2.4} far={3} />
         </group>

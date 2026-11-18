@@ -4,6 +4,7 @@ import { Text } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useGuardianStore } from '@/lib/guardian-state';
+import { DetectionSonarRings, InterceptionBarrier } from './HazardSafeguardEffects';
 
 // A flat, growing puddle on the floor below the sink during a water disaster.
 function FloodPuddle({ start }: { start: number }) {
@@ -87,6 +88,8 @@ export default function WaterMain({ position }: { position: [number, number, num
 
   return (
     <group position={position}>
+      {/* Sensor Sonar Scanning Ring on floor */}
+      <DetectionSonarRings position={[0, -1.04, 0.15]} status={status} radius={0.7} />
       {/* Sink basin embedded in counter */}
       <group position={[0, -0.5, 0]}>
         <mesh>
@@ -178,6 +181,11 @@ export default function WaterMain({ position }: { position: [number, number, num
       >
         {isCritical ? 'WATER LEAK' : 'Water Main'}
       </Text>
+
+      {/* Proactive Safeguard Barrier when Prevented */}
+      {status === 'Prevented' && (
+        <InterceptionBarrier position={[0, -0.05, 0]} label="VALVE SHUT · FLOOD PREVENTED" />
+      )}
 
       {/* Disaster effects */}
       {isCritical && disasterStart != null && (

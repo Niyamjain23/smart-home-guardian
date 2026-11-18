@@ -4,6 +4,7 @@ import { Text } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useGuardianStore } from '@/lib/guardian-state';
+import { DetectionSonarRings, InterceptionBarrier } from './HazardSafeguardEffects';
 
 // Animated semi-transparent gas cloud that pulses & expands while disaster is active.
 function GasCloud({ start }: { start: number }) {
@@ -76,6 +77,9 @@ export default function GasValve({ position }: { position: [number, number, numb
 
   return (
     <group position={position}>
+      {/* AI Sensor Active Scanning Sonar Rings */}
+      <DetectionSonarRings position={[0, -0.4, 0]} status={status} radius={0.65} />
+
       {/* Vertical pipe coming down from above */}
       <mesh position={[0, 0.4, 0]}>
         <cylinderGeometry args={[0.045, 0.045, 0.8, 16]} />
@@ -140,7 +144,12 @@ export default function GasValve({ position }: { position: [number, number, numb
         {isCritical ? 'GAS LEAK' : 'Gas Valve'}
       </Text>
 
-      {/* Disaster cloud */}
+      {/* Proactive Safeguard Barrier when Prevented */}
+      {status === 'Prevented' && (
+        <InterceptionBarrier position={[0, 0, 0]} label="VALVE SEALED · LEAK PREVENTED" />
+      )}
+
+      {/* Disaster cloud only when unmitigated Critical */}
       {isCritical && disasterStart != null && <GasCloud start={disasterStart} />}
     </group>
   );

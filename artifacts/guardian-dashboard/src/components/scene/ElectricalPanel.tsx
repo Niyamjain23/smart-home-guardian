@@ -4,6 +4,7 @@ import { Text } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useGuardianStore } from '@/lib/guardian-state';
+import { DetectionSonarRings, InterceptionBarrier } from './HazardSafeguardEffects';
 
 // Flickering sparks: small bright cubes that randomly relocate and pulse opacity.
 const SPARK_COUNT = 18;
@@ -135,6 +136,8 @@ export default function ElectricalPanel({ position }: { position: [number, numbe
 
   return (
     <group position={position} rotation={[0, Math.PI / 2, 0]}>
+      {/* Sonar Sensor Scanning Ring on floor */}
+      <DetectionSonarRings position={[0, -0.99, 0]} status={status} radius={0.7} />
       {/* Box */}
       <mesh castShadow>
         <boxGeometry args={[0.7, 0.9, 0.12]} />
@@ -206,6 +209,11 @@ export default function ElectricalPanel({ position }: { position: [number, numbe
       >
         {isCritical ? 'ELECTRICAL FIRE' : 'Electrical Panel'}
       </Text>
+
+      {/* Proactive Safeguard Barrier when Prevented */}
+      {isIsolated && (
+        <InterceptionBarrier position={[0, 0, 0.1]} label="BREAKER TRIPPED · ARC MITIGATED" />
+      )}
 
       {/* Disaster effects */}
       {isCritical && (
