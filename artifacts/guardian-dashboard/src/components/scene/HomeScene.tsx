@@ -15,56 +15,122 @@ import ElectricalPanel from './ElectricalPanel';
 import RoomLightFixture from './RoomLightFixture';
 import SceneSimControls from './SceneSimControls';
 import { useGuardianStore } from '@/lib/guardian-state';
-import { IoTSensorBeacon, GlowingConduitPath } from './HazardSafeguardEffects';
+import { IoTSensorBeacon, GlowingConduitPath, PredictiveScanningCone } from './HazardSafeguardEffects';
 
 const WALL_COLOR = '#1c2230';     // deep slate — solid dark with strong specular bounce
 const WALL_ACCENT = '#161b27';    // even deeper for the dividing wall
 const FLOOR_COLOR = '#0e1219';    // near-black polished concrete
 const TRIM_COLOR = '#2c3445';     // muted slate trim that catches highlights
 
+/**
+ * Recessed under-cabinet LED kick lighting on the kitchen island
+ * Dynamically reacts to real-time power load & cuts off on isolation
+ */
+function KitchenIslandKickLight() {
+  const electricityReading = useGuardianStore((s) => s.electricityReading);
+  const electricityStatus = useGuardianStore((s) => s.electricityStatus);
+  const manualOff = useGuardianStore((s) => s.manualOff.electricity);
+  const isPowered = electricityStatus !== 'Prevented' && !manualOff;
+  const intensity = isPowered ? Math.min(2.5, 0.5 + electricityReading * 0.35) : 0;
+
+  return (
+    <group position={[1.55, 0.03, -1.14]}>
+      {/* LED Channel Line */}
+      <mesh>
+        <boxGeometry args={[2.2, 0.02, 0.015]} />
+        <meshStandardMaterial
+          color="#38bdf8"
+          emissive="#38bdf8"
+          emissiveIntensity={intensity * 2}
+        />
+      </mesh>
+      {/* Downward floor wash glow */}
+      {isPowered && (
+        <pointLight
+          position={[0, 0.04, 0.08]}
+          color="#38bdf8"
+          intensity={intensity}
+          distance={1.6}
+          decay={2}
+        />
+      )}
+    </group>
+  );
+}
+
 function Furniture() {
   return (
     <group>
-      {/* Living Room: sofa */}
-      <group position={[-1.6, 0.25, 0.9]}>
-        <mesh castShadow>
-          <boxGeometry args={[1.4, 0.45, 0.6]} />
-          <meshStandardMaterial color="#3e5a7e" roughness={0.85} />
+      {/* Living Room: Modern Low-Profile Architectural L-Sectional */}
+      <group position={[-1.5, 0, 0.7]}>
+        {/* Recessed black plinth base */}
+        <mesh position={[0, 0.04, 0]}>
+          <boxGeometry args={[1.9, 0.08, 1.4]} />
+          <meshStandardMaterial color="#0c0f17" roughness={0.6} />
         </mesh>
-        <mesh position={[0, 0.35, -0.22]} castShadow>
-          <boxGeometry args={[1.4, 0.35, 0.18]} />
-          <meshStandardMaterial color="#4a6a92" roughness={0.85} />
+
+        {/* Main Seating Cushion */}
+        <mesh position={[0.2, 0.18, -0.2]} castShadow receiveShadow>
+          <boxGeometry args={[1.4, 0.22, 0.8]} />
+          <meshStandardMaterial color="#222b3d" roughness={0.88} />
         </mesh>
-        <mesh position={[-0.4, 0.3, 0.05]} castShadow>
-          <boxGeometry args={[0.5, 0.12, 0.4]} />
-          <meshStandardMaterial color="#5a7eaa" roughness={0.9} />
+
+        {/* Chaise / L-Lounge Extension (Left side extending forward) */}
+        <mesh position={[-0.65, 0.18, 0.15]} castShadow receiveShadow>
+          <boxGeometry args={[0.75, 0.22, 1.3]} />
+          <meshStandardMaterial color="#222b3d" roughness={0.88} />
         </mesh>
-        <mesh position={[0.4, 0.3, 0.05]} castShadow>
-          <boxGeometry args={[0.5, 0.12, 0.4]} />
-          <meshStandardMaterial color="#5a7eaa" roughness={0.9} />
+
+        {/* Low Minimalist Backrest */}
+        <mesh position={[0.2, 0.38, -0.55]} castShadow>
+          <boxGeometry args={[1.4, 0.26, 0.18]} />
+          <meshStandardMaterial color="#2a354b" roughness={0.85} />
+        </mesh>
+        <mesh position={[-0.95, 0.38, 0.15]} castShadow>
+          <boxGeometry args={[0.18, 0.26, 1.3]} />
+          <meshStandardMaterial color="#2a354b" roughness={0.85} />
+        </mesh>
+
+        {/* Designer Throw Pillows */}
+        <mesh position={[-0.1, 0.34, -0.42]} rotation={[0, 0.1, -0.1]} castShadow>
+          <boxGeometry args={[0.32, 0.24, 0.1]} />
+          <meshStandardMaterial color="#38bdf8" roughness={0.7} />
+        </mesh>
+        <mesh position={[0.4, 0.34, -0.42]} rotation={[0, -0.15, 0.1]} castShadow>
+          <boxGeometry args={[0.34, 0.24, 0.1]} />
+          <meshStandardMaterial color="#475569" roughness={0.8} />
         </mesh>
       </group>
 
-      {/* Coffee table */}
-      <group position={[-1.6, 0.18, 0.05]}>
-        <mesh castShadow>
-          <boxGeometry args={[0.7, 0.04, 0.4]} />
-          <meshStandardMaterial color="#2c2c30" roughness={0.4} metalness={0.2} />
+      {/* Modern Minimalist Coffee Table (Smoked Glass & Matte Steel) */}
+      <group position={[-1.2, 0.14, 0.4]}>
+        {/* Smoked glass top */}
+        <mesh castShadow receiveShadow>
+          <boxGeometry args={[0.75, 0.03, 0.45]} />
+          <meshStandardMaterial
+            color="#0f172a"
+            roughness={0.1}
+            metalness={0.9}
+            transparent
+            opacity={0.85}
+          />
         </mesh>
-        {[-0.3, 0.3].map((x) =>
-          [-0.16, 0.16].map((z) => (
-            <mesh key={`${x}-${z}`} position={[x, -0.09, z]} castShadow>
-              <boxGeometry args={[0.04, 0.18, 0.04]} />
-              <meshStandardMaterial color="#1a1a1e" />
-            </mesh>
-          ))
-        )}
+        {/* Recessed metal frame */}
+        <mesh position={[0, -0.07, 0]} castShadow>
+          <boxGeometry args={[0.72, 0.11, 0.42]} />
+          <meshStandardMaterial color="#020617" metalness={0.8} roughness={0.3} wireframe />
+        </mesh>
       </group>
 
-      {/* Rug — soft accent on grey floor */}
-      <mesh position={[-1.6, 0.011, 0.4]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <planeGeometry args={[2.0, 1.4]} />
-        <meshStandardMaterial color="#5a8c9b" roughness={1} />
+      {/* Plush Designer Area Rug */}
+      <mesh position={[-1.4, 0.008, 0.6]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <planeGeometry args={[2.2, 1.8]} />
+        <meshStandardMaterial color="#172033" roughness={0.95} />
+      </mesh>
+      {/* Subtle Cyan Border Inset on Rug */}
+      <mesh position={[-1.4, 0.009, 0.6]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.85, 0.87, 4]} />
+        <meshBasicMaterial color="#06b6d4" transparent opacity={0.35} />
       </mesh>
 
       {/* Kitchen counter */}
@@ -84,6 +150,9 @@ function Furniture() {
           </mesh>
         ))}
       </group>
+
+      {/* Under-cabinet island kick light */}
+      <KitchenIslandKickLight />
 
       {/* Stove */}
       <group position={[2.5, 0.95, -1.4]}>
@@ -165,11 +234,78 @@ function HouseStructure() {
         <meshStandardMaterial color={WALL_COLOR} roughness={0.45} metalness={0.2} envMapIntensity={1.2} />
       </mesh>
 
-      {/* Side walls */}
-      <mesh position={[-2.96, 1.1, -0.5]} castShadow receiveShadow>
-        <boxGeometry args={[0.08, 2.2, 3]} />
+      {/* Left Wall & Floor-to-Ceiling Panoramic Patio Glass Door */}
+      {/* 1. Solid Utility Corner Wall (Where Electrical Breaker Panel mounts) */}
+      <mesh position={[-2.96, 1.1, -1.35]} castShadow receiveShadow>
+        <boxGeometry args={[0.08, 2.2, 1.2]} />
         <meshStandardMaterial color={WALL_COLOR} roughness={0.45} metalness={0.2} envMapIntensity={1.2} />
       </mesh>
+
+      {/* 2. Top Header Beam above Glass Patio Door */}
+      <mesh position={[-2.96, 2.1, 0.4]} castShadow receiveShadow>
+        <boxGeometry args={[0.08, 0.2, 2.3]} />
+        <meshStandardMaterial color={TRIM_COLOR} roughness={0.5} />
+      </mesh>
+
+      {/* 3. Floor-to-Ceiling Glass Sliding Patio Panels */}
+      <group position={[-2.96, 1.0, 0.4]}>
+        {/* Glass Panes with subtle cyan reflection */}
+        <mesh castShadow>
+          <boxGeometry args={[0.02, 2.0, 2.25]} />
+          <meshStandardMaterial
+            color="#99d6ea"
+            emissive="#38bdf8"
+            emissiveIntensity={0.06}
+            roughness={0.05}
+            metalness={0.9}
+            transparent
+            opacity={0.32}
+            envMapIntensity={2.5}
+          />
+        </mesh>
+        {/* Sleek Minimalist Matte Black Frame & Mullions */}
+        <mesh position={[0, 0, 0]}>
+          <boxGeometry args={[0.05, 2.02, 0.04]} />
+          <meshStandardMaterial color="#090d14" roughness={0.3} metalness={0.7} />
+        </mesh>
+        <mesh position={[0, 0, -1.1]}>
+          <boxGeometry args={[0.05, 2.02, 0.04]} />
+          <meshStandardMaterial color="#090d14" roughness={0.3} metalness={0.7} />
+        </mesh>
+        <mesh position={[0, 0, 1.1]}>
+          <boxGeometry args={[0.05, 2.02, 0.04]} />
+          <meshStandardMaterial color="#090d14" roughness={0.3} metalness={0.7} />
+        </mesh>
+      </group>
+
+      {/* 4. Exterior Cantilevered Terrace / Balcony Deck */}
+      <group position={[-3.65, -0.02, 0.4]}>
+        {/* Deck Floor (Dark composite slats) */}
+        <mesh receiveShadow>
+          <boxGeometry args={[1.3, 0.06, 2.4]} />
+          <meshStandardMaterial color="#111622" roughness={0.7} metalness={0.2} />
+        </mesh>
+        {/* Minimalist Glass Balustrade / Railing */}
+        <mesh position={[-0.62, 0.45, 0]}>
+          <boxGeometry args={[0.02, 0.85, 2.4]} />
+          <meshStandardMaterial
+            color="#38bdf8"
+            transparent
+            opacity={0.25}
+            roughness={0.1}
+            metalness={0.9}
+          />
+        </mesh>
+        {/* Railing Top Handrail */}
+        <mesh position={[-0.62, 0.88, 0]}>
+          <boxGeometry args={[0.04, 0.02, 2.4]} />
+          <meshStandardMaterial color="#334155" metalness={0.8} />
+        </mesh>
+        {/* Exterior Evening Terrace Ambient Lighting */}
+        <pointLight position={[0, 0.35, 0]} color="#38bdf8" intensity={1.2} distance={3.5} decay={2} />
+      </group>
+
+      {/* Right side wall (Kitchen side) */}
       <mesh position={[2.96, 1.1, -0.5]} castShadow receiveShadow>
         <boxGeometry args={[0.08, 2.2, 3]} />
         <meshStandardMaterial color={WALL_COLOR} roughness={0.45} metalness={0.2} envMapIntensity={1.2} />
@@ -262,62 +398,62 @@ export default function HomeScene({
 
   return (
     <div className="absolute inset-0">
-      {/* Floating viewport controls (Glass pills) */}
-      <div className="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
+      {/* Floating viewport controls (Top-Right horizontal glass bar, aligned with HUD below header) */}
+      <div className="absolute top-20 right-3 sm:right-6 z-20 flex items-center gap-1 sm:gap-1.5 p-1 sm:p-1.5 rounded-2xl border border-white/12 bg-zinc-950/65 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] pointer-events-auto">
         <button
           onClick={() => setAutoRotate((v) => !v)}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium border backdrop-blur-xl transition-all shadow-lg cursor-pointer ${
+          className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
             !autoRotate
-              ? 'bg-amber-500/20 border-amber-500/40 text-amber-300'
-              : 'bg-zinc-950/60 border-white/10 text-white/80 hover:text-white hover:border-white/20'
+              ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+              : 'text-muted-foreground hover:text-white hover:bg-white/5 border border-transparent'
           }`}
           title={autoRotate ? 'Pause camera rotation' : 'Resume auto-rotate'}
         >
-          {autoRotate ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-          <span className="hidden sm:inline">{autoRotate ? 'Pause' : 'Auto'}</span>
+          {autoRotate ? <Pause className="w-3.5 h-3.5 text-white/80" /> : <Play className="w-3.5 h-3.5" />}
+          <span className="hidden md:inline">{autoRotate ? 'Pause' : 'Auto'}</span>
         </button>
         <button
           onClick={recenterCamera}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium border border-white/10 bg-zinc-950/60 backdrop-blur-xl text-white/80 hover:text-white hover:border-white/20 shadow-lg transition-all cursor-pointer"
+          className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-medium text-muted-foreground hover:text-white hover:bg-white/5 transition-all cursor-pointer border border-transparent"
           title="Recenter camera to default view"
         >
-          <Crosshair className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Reset</span>
+          <Crosshair className="w-3.5 h-3.5 text-white/80" />
+          <span className="hidden md:inline">Reset</span>
         </button>
         <button
           onClick={toggleAxes}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium border backdrop-blur-xl transition-all shadow-lg cursor-pointer ${
+          className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
             showAxes
-              ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
-              : 'bg-zinc-950/60 border-white/10 text-white/80 hover:text-white hover:border-white/20'
+              ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+              : 'text-muted-foreground hover:text-white hover:bg-white/5 border border-transparent'
           }`}
-          title="Toggle axis & grid view"
+          title="Toggle Blender-style axis & grid"
         >
-          <Box className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Axes</span>
+          <Box className="w-3.5 h-3.5 text-white/80" />
+          <span className="hidden md:inline">Axes</span>
         </button>
         <button
           onClick={() => setShowHouse((v) => !v)}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium border backdrop-blur-xl transition-all shadow-lg cursor-pointer ${
+          className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
             !showHouse
-              ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
-              : 'bg-zinc-950/60 border-white/10 text-white/80 hover:text-white hover:border-white/20'
+              ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
+              : 'text-muted-foreground hover:text-white hover:bg-white/5 border border-transparent'
           }`}
           title="Toggle house walls"
         >
-          {showHouse ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
-          <span className="hidden sm:inline">Walls</span>
+          {showHouse ? <Eye className="w-3.5 h-3.5 text-white/80" /> : <EyeOff className="w-3.5 h-3.5" />}
+          <span className="hidden md:inline">Walls</span>
         </button>
       </div>
 
-      {/* Camera control hint */}
+      {/* Camera control hint (Positioned above dock on right side, subtle) */}
       {!autoRotate && (
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 px-3.5 py-1.5 rounded-full bg-zinc-950/70 border border-white/10 backdrop-blur-xl text-[11px] font-medium text-white/70 hidden sm:flex items-center gap-3 shadow-xl">
-          <span>Drag to Orbit</span>
+        <div className="absolute bottom-20 right-4 sm:right-6 z-10 px-3 py-1.5 rounded-xl bg-zinc-950/70 border border-white/10 backdrop-blur-xl text-[10px] font-medium text-white/70 hidden sm:flex items-center gap-2.5 shadow-xl">
+          <span>Drag: Orbit</span>
           <span className="text-white/20">|</span>
-          <span>Right-click to Pan</span>
+          <span>Right-click: Pan</span>
           <span className="text-white/20">|</span>
-          <span>Scroll to Zoom</span>
+          <span>Scroll: Zoom</span>
         </div>
       )}
 
@@ -391,6 +527,11 @@ export default function HomeScene({
           <IoTSensorBeacon position={[2.5, 1.45, -1.4]} label="Gas Sniffer" status={gasStatus} />
           <IoTSensorBeacon position={[1.0, 1.45, -1.4]} label="Hydro Probe" status={waterStatus} />
           <IoTSensorBeacon position={[-2.88, 1.7, 0.3]} label="Smart CT Sensor" status={electricityStatus} />
+
+          {/* Predictive Volumetric Scanning Cones (Visualizing pre-emptive hazard detection) */}
+          <PredictiveScanningCone position={[2.5, 1.43, -1.4]} status={gasStatus} height={0.5} radius={0.28} />
+          <PredictiveScanningCone position={[1.0, 1.43, -1.4]} status={waterStatus} height={0.5} radius={0.28} />
+          <PredictiveScanningCone position={[-2.88, 1.68, 0.3]} status={electricityStatus} height={0.68} radius={0.32} />
 
           {/* Glowing Utility Flow Conduits */}
           <GlowingConduitPath position={[2.55, 0.2, -1.45]} args={[0.3, 0.03, 0.03]} color="#f59e0b" status={gasStatus} />

@@ -162,20 +162,22 @@ export default function Dashboard() {
         )}
       </AnimatePresence>
 
-      {/* 5. Animated Floating Glass Modal / Panel (Opens on dock click) */}
+      {/* 5. Animated Floating Glass Drawer / Panel (Slides in at Bottom-Left & Stays) */}
       <AnimatePresence>
         {activePanel && (
-          <div className="absolute inset-0 z-30 pointer-events-none flex items-center justify-center p-4 sm:p-6 pb-24">
+          <div className="absolute bottom-20 left-3 sm:left-6 z-30 pointer-events-auto w-[calc(100vw-24px)] sm:w-[480px] lg:w-[520px] max-h-[calc(100dvh-170px)]">
             <motion.div
-              initial={{ opacity: 0, scale: 0.94, y: 25 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.94, y: 25 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="w-full max-w-2xl max-h-[75vh] flex flex-col rounded-3xl border border-white/15 bg-zinc-950/75 backdrop-blur-3xl shadow-[0_25px_80px_rgba(0,0,0,0.85)] pointer-events-auto overflow-hidden"
+              key={activePanel}
+              initial={{ opacity: 0, x: -35, y: 15, scale: 0.96 }}
+              animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+              exit={{ opacity: 0, x: -35, y: 15, scale: 0.96 }}
+              transition={{ type: 'spring', damping: 26, stiffness: 320 }}
+              className="w-full max-h-[calc(100dvh-170px)] flex flex-col rounded-3xl border border-white/15 bg-zinc-950/80 backdrop-blur-3xl shadow-[0_20px_70px_rgba(0,0,0,0.85)] overflow-hidden"
             >
               {/* Panel Top Bar */}
-              <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/10 shrink-0">
+              <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/10 shrink-0 bg-white/[0.02]">
                 <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
                   <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground font-mono">
                     {activePanel === 'vitals' && 'Telemetry Gauges & Vitals'}
                     {activePanel === 'chart' && 'Realtime Power Consumption'}
@@ -186,6 +188,7 @@ export default function Dashboard() {
                 <button
                   onClick={() => setActivePanel(null)}
                   className="w-7 h-7 rounded-xl bg-white/5 hover:bg-white/15 flex items-center justify-center text-muted-foreground hover:text-white transition-colors cursor-pointer"
+                  title="Close panel (or click dock item again)"
                 >
                   <X className="w-4 h-4" />
                 </button>
