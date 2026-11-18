@@ -162,9 +162,9 @@ export default function NotificationsPanel() {
                   </div>
 
                   {/* Controls Strip */}
-                  <div className="px-5 pt-3.5 pb-3 flex flex-col gap-3 shrink-0 border-b border-white/8">
+                  <div className="px-3 sm:px-5 pt-3.5 pb-3 flex flex-col gap-2.5 sm:gap-3 shrink-0 border-b border-white/8">
                     {/* 1. Severity Stat Chips */}
-                    <div className="grid grid-cols-4 gap-2">
+                    <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
                       {(['critical', 'warning', 'success', 'info'] as const).map((sev) => {
                         const isSel = severityFilter === sev;
                         const count = counts[sev];
@@ -267,21 +267,21 @@ export default function NotificationsPanel() {
                       <button
                         onClick={() => exportToCsv(filtered)}
                         disabled={filtered.length === 0}
-                        className="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-white/80 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
+                        className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-white/80 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
                         title="Export CSV"
                       >
                         <Download className="w-3.5 h-3.5" />
-                        <span className="text-xs">CSV</span>
+                        <span className="text-xs hidden sm:inline">CSV</span>
                       </button>
 
                       <button
                         onClick={clearNotifications}
                         disabled={notifications.length === 0}
-                        className="px-3 py-1.5 rounded-xl bg-destructive/10 hover:bg-destructive/20 border border-destructive/20 text-xs text-destructive flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
+                        className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-destructive/10 hover:bg-destructive/20 border border-destructive/20 text-xs text-destructive flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
                         title="Clear all logs"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
-                        <span className="text-xs">Clear</span>
+                        <span className="text-xs hidden sm:inline">Clear</span>
                       </button>
                     </div>
                   </div>

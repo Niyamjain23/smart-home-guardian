@@ -160,7 +160,7 @@ export default function HomeControlsHub() {
             transition={{ duration: 0.15 }}
             className="flex flex-col gap-2.5"
           >
-            <div className="grid grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {APPLIANCES.map((a) => {
                 const Icon = APPLIANCE_ICONS[a.key];
                 const isOn = appliances[a.key] && !isPowerIsolated;

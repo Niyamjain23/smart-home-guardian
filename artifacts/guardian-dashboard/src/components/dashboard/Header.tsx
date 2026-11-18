@@ -30,7 +30,7 @@ export default function Header() {
         </div>
 
         {/* Right side live status pills & notifications */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-3">
           {/* Live Power Pill */}
           <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
             <Activity className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
@@ -47,13 +47,13 @@ export default function Header() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-xs font-medium backdrop-blur-md"
+                className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-xs font-medium backdrop-blur-md"
               >
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
                 </span>
-                <span>All Normal</span>
+                <span><span className="hidden sm:inline">All </span>Normal</span>
               </motion.div>
             ) : (
               <motion.div
@@ -61,10 +61,10 @@ export default function Header() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/40 text-amber-300 text-xs font-medium backdrop-blur-md shadow-[0_0_15px_rgba(245,158,11,0.2)] animate-pulse"
+                className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/40 text-amber-300 text-xs font-medium backdrop-blur-md shadow-[0_0_15px_rgba(245,158,11,0.2)] animate-pulse"
               >
                 <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
-                <span>Anomaly Detected</span>
+                <span>Anomaly</span>
               </motion.div>
             )}
           </AnimatePresence>

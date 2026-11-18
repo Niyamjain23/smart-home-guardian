@@ -13,7 +13,6 @@ import GasValve from './GasValve';
 import WaterMain from './WaterMain';
 import ElectricalPanel from './ElectricalPanel';
 import RoomLightFixture from './RoomLightFixture';
-import SceneSimControls from './SceneSimControls';
 import { useGuardianStore } from '@/lib/guardian-state';
 import { IoTSensorBeacon, GlowingConduitPath } from './HazardSafeguardEffects';
 
@@ -363,11 +362,11 @@ export default function HomeScene({
 
   return (
     <div className="absolute inset-0">
-      {/* Floating viewport controls (Top-Right horizontal glass bar, aligned with HUD below header) */}
-      <div className="absolute top-20 right-3 sm:right-6 z-20 flex items-center gap-1 sm:gap-1.5 p-1 sm:p-1.5 rounded-2xl border border-white/12 bg-zinc-950/65 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] pointer-events-auto">
+      {/* Floating viewport controls (Vertical stack on mobile, horizontal on desktop) */}
+      <div className="absolute top-20 right-3 sm:right-6 z-20 flex flex-col sm:flex-row items-center gap-1 sm:gap-1.5 p-1 sm:p-1.5 rounded-2xl border border-white/12 bg-zinc-950/65 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] pointer-events-auto">
         <button
           onClick={() => setAutoRotate((v) => !v)}
-          className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
+          className={`w-8 h-8 sm:w-auto sm:h-auto flex items-center justify-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
             !autoRotate
               ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
               : 'text-muted-foreground hover:text-white hover:bg-white/5 border border-transparent'
@@ -379,7 +378,7 @@ export default function HomeScene({
         </button>
         <button
           onClick={recenterCamera}
-          className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-medium text-muted-foreground hover:text-white hover:bg-white/5 transition-all cursor-pointer border border-transparent"
+          className="w-8 h-8 sm:w-auto sm:h-auto flex items-center justify-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-medium text-muted-foreground hover:text-white hover:bg-white/5 transition-all cursor-pointer border border-transparent"
           title="Recenter camera to default view"
         >
           <Crosshair className="w-3.5 h-3.5 text-white/80" />
@@ -387,7 +386,7 @@ export default function HomeScene({
         </button>
         <button
           onClick={toggleAxes}
-          className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
+          className={`w-8 h-8 sm:w-auto sm:h-auto flex items-center justify-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
             showAxes
               ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
               : 'text-muted-foreground hover:text-white hover:bg-white/5 border border-transparent'
@@ -399,7 +398,7 @@ export default function HomeScene({
         </button>
         <button
           onClick={() => setShowHouse((v) => !v)}
-          className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
+          className={`w-8 h-8 sm:w-auto sm:h-auto flex items-center justify-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
             !showHouse
               ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
               : 'text-muted-foreground hover:text-white hover:bg-white/5 border border-transparent'
@@ -422,7 +421,7 @@ export default function HomeScene({
         </div>
       )}
 
-      {/* XYZ legend (visible when axes mode is on) — top-left so it doesn't collide with mobile sim controls */}
+      {/* XYZ legend (visible when axes mode is on) — top-left so it doesn't collide */}
       {showAxes && (
         <div className="absolute top-3 left-3 z-10 px-3 py-2 rounded-md bg-black/40 border border-white/10 backdrop-blur-md text-[10px] font-mono uppercase tracking-wider text-white/80 flex gap-3">
           <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-red-500" />X</span>
@@ -430,9 +429,6 @@ export default function HomeScene({
           <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-500" />Z</span>
         </div>
       )}
-
-      {/* Mobile-only quick simulation controls overlaid on the 3D pane */}
-      <SceneSimControls />
 
       <Canvas
         shadows
