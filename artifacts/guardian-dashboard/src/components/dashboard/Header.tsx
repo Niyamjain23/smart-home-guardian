@@ -1,63 +1,82 @@
 import React from 'react';
-import { ShieldCheck, ShieldAlert, Lock } from 'lucide-react';
+import { ShieldCheck, ShieldAlert, Activity } from 'lucide-react';
 import { useGuardianStore } from '@/lib/guardian-state';
 import { motion, AnimatePresence } from 'framer-motion';
 import NotificationsPanel from './NotificationsPanel';
 
 export default function Header() {
   const systemStatus = useGuardianStore((s) => s.systemStatus);
+  const electricityReading = useGuardianStore((s) => s.electricityReading);
+
+  const isNominal = systemStatus === 'nominal';
 
   return (
-    <header className="h-16 border-b border-border bg-card flex items-center justify-between px-4 md:px-6 shrink-0">
+    <header className="h-16 border-b border-white/10 bg-card/60 backdrop-blur-xl flex items-center justify-between px-4 md:px-6 shrink-0 relative z-30">
+      {/* Brand */}
       <div className="flex items-center gap-3 min-w-0">
-        <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/50 shrink-0">
-          <ShieldCheck className="w-5 h-5 text-primary" />
+        <div className="relative">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/10 flex items-center justify-center border border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.15)] shrink-0">
+            <ShieldCheck className="w-5 h-5 text-emerald-400" />
+          </div>
+          <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-background animate-pulse" />
         </div>
-        <h1 className="font-bold text-lg md:text-xl tracking-tight text-foreground truncate">GUARDIAN</h1>
 
-        {/* Network security badge */}
-        <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-emerald-500/50 bg-emerald-500/8 ml-1">
-          <Lock className="w-3 h-3 text-emerald-400 shrink-0" />
-          <span className="text-[10px] font-mono tracking-wider uppercase text-emerald-400 whitespace-nowrap">
-            NETWORK: PRIVATE ISOLATED SUBNET (TLS ENCRYPTED)
+        <div className="flex flex-col min-w-0">
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-base md:text-lg tracking-tight bg-gradient-to-r from-white via-white/90 to-white/70 bg-clip-text text-transparent">
+              GUARDIAN
+            </span>
+            <span className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-medium tracking-wide uppercase rounded bg-white/5 border border-white/10 text-muted-foreground">
+              v2.4
+            </span>
+          </div>
+          <span className="text-[11px] text-muted-foreground hidden sm:block truncate">
+            Autonomous Disaster Prevention
           </span>
         </div>
       </div>
 
-      <div className="flex items-center gap-3 md:gap-6">
+      {/* Right side live status pills & notifications */}
+      <div className="flex items-center gap-2.5 md:gap-4">
+        {/* Live Power Pill */}
+        <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
+          <Activity className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+          <span className="text-xs font-medium text-foreground tabular-nums">
+            {electricityReading.toFixed(2)} <span className="text-muted-foreground text-[11px]">kW</span>
+          </span>
+        </div>
+
+        {/* Global Protection Status Pill */}
         <AnimatePresence mode="wait">
-          {systemStatus === 'nominal' ? (
+          {isNominal ? (
             <motion.div
               key="nominal"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              className="flex items-center gap-2 text-primary"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-xs font-medium backdrop-blur-md"
             >
-              <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-              <span className="hidden sm:inline text-xs md:text-sm font-mono tracking-wider uppercase">
-                All Normal
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
               </span>
-              <span className="sm:hidden text-xs font-mono uppercase">Normal</span>
+              <span>All Normal</span>
             </motion.div>
           ) : (
             <motion.div
-              key="anomaly"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              className="flex items-center gap-2 text-amber-500"
+              key="hazard"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/40 text-amber-300 text-xs font-medium backdrop-blur-md shadow-[0_0_15px_rgba(245,158,11,0.2)] animate-pulse"
             >
-              <ShieldAlert className="w-4 h-4 animate-pulse" />
-              <span className="hidden sm:inline text-xs md:text-sm font-mono tracking-wider uppercase">
-                Anomaly Detected
-              </span>
-              <span className="sm:hidden text-xs font-mono uppercase">Anomaly</span>
+              <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
+              <span>Anomaly Detected</span>
             </motion.div>
           )}
         </AnimatePresence>
 
-        <div className="hidden md:block h-6 w-px bg-border" />
+        <div className="h-5 w-px bg-white/10" />
 
         <NotificationsPanel />
       </div>
