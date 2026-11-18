@@ -60,10 +60,26 @@ function GasCloud({ start }: { start: number }) {
   );
 }
 
-export default function GasValve({ position }: { position: [number, number, number] }) {
+export default function GasValve({
+  position,
+  onSelect,
+}: {
+  position: [number, number, number];
+  onSelect?: () => void;
+}) {
   const status = useGuardianStore((s) => s.gasStatus);
   const manualOff = useGuardianStore((s) => s.manualOff.gas);
   const disasterStart = useGuardianStore((s) => s.disasterStart.gas);
+  const [hovered, setHovered] = React.useState(false);
+
+  React.useEffect(() => {
+    if (hovered) {
+      document.body.style.cursor = 'pointer';
+    }
+    return () => {
+      document.body.style.cursor = 'auto';
+    };
+  }, [hovered]);
 
   const isClosed = status === 'Prevented' || manualOff;
   const isCritical = status === 'Critical';
@@ -76,7 +92,18 @@ export default function GasValve({ position }: { position: [number, number, numb
   });
 
   return (
-    <group position={position}>
+    <group
+      position={position}
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelect?.();
+      }}
+      onPointerOver={(e) => {
+        e.stopPropagation();
+        setHovered(true);
+      }}
+      onPointerOut={() => setHovered(false)}
+    >
       {/* AI Sensor Active Scanning Sonar Rings */}
       <DetectionSonarRings position={[0, -0.4, 0]} status={status} radius={0.65} />
 

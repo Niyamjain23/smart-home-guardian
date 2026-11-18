@@ -229,7 +229,11 @@ function HouseStructure() {
   );
 }
 
-export default function HomeScene() {
+export default function HomeScene({
+  onSelectUtility,
+}: {
+  onSelectUtility?: (type: 'gas' | 'water' | 'electricity') => void;
+} = {}) {
   const showAxes = useGuardianStore((s) => s.showAxes);
   const toggleAxes = useGuardianStore((s) => s.toggleAxes);
   const gasStatus = useGuardianStore((s) => s.gasStatus);
@@ -368,11 +372,20 @@ export default function HomeScene() {
           )}
 
           <RoomLightFixture position={[-1.5, 1.95, 0]} room="livingRoom" />
-          <ElectricalPanel position={[-2.9, 1.0, 0.3]} />
+          <ElectricalPanel
+            position={[-2.9, 1.0, 0.3]}
+            onSelect={() => onSelectUtility?.('electricity')}
+          />
 
           <RoomLightFixture position={[1.5, 1.95, 0]} room="kitchen" />
-          <GasValve position={[2.6, 1.05, -1.45]} />
-          <WaterMain position={[1.0, 1.05, -1.45]} />
+          <GasValve
+            position={[2.6, 1.05, -1.45]}
+            onSelect={() => onSelectUtility?.('gas')}
+          />
+          <WaterMain
+            position={[1.0, 1.05, -1.45]}
+            onSelect={() => onSelectUtility?.('water')}
+          />
 
           {/* Smart IoT Beacons */}
           <IoTSensorBeacon position={[2.5, 1.45, -1.4]} label="Gas Sniffer" status={gasStatus} />

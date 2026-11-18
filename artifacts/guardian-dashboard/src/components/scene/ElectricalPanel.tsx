@@ -108,9 +108,25 @@ function SmokeCloud() {
   );
 }
 
-export default function ElectricalPanel({ position }: { position: [number, number, number] }) {
+export default function ElectricalPanel({
+  position,
+  onSelect,
+}: {
+  position: [number, number, number];
+  onSelect?: () => void;
+}) {
   const status = useGuardianStore((s) => s.electricityStatus);
   const manualOff = useGuardianStore((s) => s.manualOff.electricity);
+  const [hovered, setHovered] = React.useState(false);
+
+  React.useEffect(() => {
+    if (hovered) {
+      document.body.style.cursor = 'pointer';
+    }
+    return () => {
+      document.body.style.cursor = 'auto';
+    };
+  }, [hovered]);
 
   const isIsolated = (status === 'Prevented' || manualOff) && status !== 'Critical';
   const isCritical = status === 'Critical';
@@ -135,7 +151,19 @@ export default function ElectricalPanel({ position }: { position: [number, numbe
   });
 
   return (
-    <group position={position} rotation={[0, Math.PI / 2, 0]}>
+    <group
+      position={position}
+      rotation={[0, Math.PI / 2, 0]}
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelect?.();
+      }}
+      onPointerOver={(e) => {
+        e.stopPropagation();
+        setHovered(true);
+      }}
+      onPointerOut={() => setHovered(false)}
+    >
       {/* Sonar Sensor Scanning Ring on floor */}
       <DetectionSonarRings position={[0, -0.99, 0]} status={status} radius={0.7} />
       {/* Box */}

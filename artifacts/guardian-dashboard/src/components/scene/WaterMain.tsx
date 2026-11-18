@@ -70,10 +70,26 @@ function FloodSpray() {
   );
 }
 
-export default function WaterMain({ position }: { position: [number, number, number] }) {
+export default function WaterMain({
+  position,
+  onSelect,
+}: {
+  position: [number, number, number];
+  onSelect?: () => void;
+}) {
   const status = useGuardianStore((s) => s.waterStatus);
   const manualOff = useGuardianStore((s) => s.manualOff.water);
   const disasterStart = useGuardianStore((s) => s.disasterStart.water);
+  const [hovered, setHovered] = React.useState(false);
+
+  React.useEffect(() => {
+    if (hovered) {
+      document.body.style.cursor = 'pointer';
+    }
+    return () => {
+      document.body.style.cursor = 'auto';
+    };
+  }, [hovered]);
 
   const isClosed = (status === 'Prevented' || manualOff) && status !== 'Critical';
   const isCritical = status === 'Critical';
@@ -87,7 +103,18 @@ export default function WaterMain({ position }: { position: [number, number, num
   });
 
   return (
-    <group position={position}>
+    <group
+      position={position}
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelect?.();
+      }}
+      onPointerOver={(e) => {
+        e.stopPropagation();
+        setHovered(true);
+      }}
+      onPointerOut={() => setHovered(false)}
+    >
       {/* Sensor Sonar Scanning Ring on floor */}
       <DetectionSonarRings position={[0, -1.04, 0.15]} status={status} radius={0.7} />
       {/* Sink basin embedded in counter */}

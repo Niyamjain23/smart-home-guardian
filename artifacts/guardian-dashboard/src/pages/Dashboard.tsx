@@ -49,7 +49,7 @@ export default function Dashboard() {
     <div className="relative w-screen h-[100dvh] bg-[#07090e] text-foreground overflow-hidden select-none font-sans">
       {/* 1. Immersive 3D Spatial Home (100% full screen background, zero barriers) */}
       <div className="absolute inset-0 w-full h-full z-0">
-        <HomeScene />
+        <HomeScene onSelectUtility={() => setActivePanel('controls')} />
       </div>
 
       {/* 2. Top Floating Navigation Header */}
