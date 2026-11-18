@@ -22,17 +22,9 @@ export default function Header() {
             <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-background animate-pulse" />
           </div>
 
-          <div className="flex flex-col min-w-0">
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-sm sm:text-base tracking-tight text-white">
-                GUARDIAN
-              </span>
-              <span className="hidden sm:inline-block px-1.5 py-0.5 text-[9px] font-medium tracking-wide uppercase rounded bg-white/5 border border-white/10 text-muted-foreground">
-                3D Spatial IoT
-              </span>
-            </div>
-            <span className="text-[10px] text-muted-foreground hidden sm:block truncate">
-              Autonomous Hazard Prevention
+          <div className="flex items-center">
+            <span className="font-bold text-sm sm:text-base tracking-tight text-white">
+              GUARDIAN
             </span>
           </div>
         </div>

@@ -15,7 +15,7 @@ import ElectricalPanel from './ElectricalPanel';
 import RoomLightFixture from './RoomLightFixture';
 import SceneSimControls from './SceneSimControls';
 import { useGuardianStore } from '@/lib/guardian-state';
-import { IoTSensorBeacon, GlowingConduitPath, PredictiveScanningCone } from './HazardSafeguardEffects';
+import { IoTSensorBeacon, GlowingConduitPath } from './HazardSafeguardEffects';
 
 const WALL_COLOR = '#1c2230';     // deep slate — solid dark with strong specular bounce
 const WALL_ACCENT = '#161b27';    // even deeper for the dividing wall
@@ -234,78 +234,11 @@ function HouseStructure() {
         <meshStandardMaterial color={WALL_COLOR} roughness={0.45} metalness={0.2} envMapIntensity={1.2} />
       </mesh>
 
-      {/* Left Wall & Floor-to-Ceiling Panoramic Patio Glass Door */}
-      {/* 1. Solid Utility Corner Wall (Where Electrical Breaker Panel mounts) */}
-      <mesh position={[-2.96, 1.1, -1.35]} castShadow receiveShadow>
-        <boxGeometry args={[0.08, 2.2, 1.2]} />
+      {/* Side walls */}
+      <mesh position={[-2.96, 1.1, -0.5]} castShadow receiveShadow>
+        <boxGeometry args={[0.08, 2.2, 3]} />
         <meshStandardMaterial color={WALL_COLOR} roughness={0.45} metalness={0.2} envMapIntensity={1.2} />
       </mesh>
-
-      {/* 2. Top Header Beam above Glass Patio Door */}
-      <mesh position={[-2.96, 2.1, 0.4]} castShadow receiveShadow>
-        <boxGeometry args={[0.08, 0.2, 2.3]} />
-        <meshStandardMaterial color={TRIM_COLOR} roughness={0.5} />
-      </mesh>
-
-      {/* 3. Floor-to-Ceiling Glass Sliding Patio Panels */}
-      <group position={[-2.96, 1.0, 0.4]}>
-        {/* Glass Panes with subtle cyan reflection */}
-        <mesh castShadow>
-          <boxGeometry args={[0.02, 2.0, 2.25]} />
-          <meshStandardMaterial
-            color="#99d6ea"
-            emissive="#38bdf8"
-            emissiveIntensity={0.06}
-            roughness={0.05}
-            metalness={0.9}
-            transparent
-            opacity={0.32}
-            envMapIntensity={2.5}
-          />
-        </mesh>
-        {/* Sleek Minimalist Matte Black Frame & Mullions */}
-        <mesh position={[0, 0, 0]}>
-          <boxGeometry args={[0.05, 2.02, 0.04]} />
-          <meshStandardMaterial color="#090d14" roughness={0.3} metalness={0.7} />
-        </mesh>
-        <mesh position={[0, 0, -1.1]}>
-          <boxGeometry args={[0.05, 2.02, 0.04]} />
-          <meshStandardMaterial color="#090d14" roughness={0.3} metalness={0.7} />
-        </mesh>
-        <mesh position={[0, 0, 1.1]}>
-          <boxGeometry args={[0.05, 2.02, 0.04]} />
-          <meshStandardMaterial color="#090d14" roughness={0.3} metalness={0.7} />
-        </mesh>
-      </group>
-
-      {/* 4. Exterior Cantilevered Terrace / Balcony Deck */}
-      <group position={[-3.65, -0.02, 0.4]}>
-        {/* Deck Floor (Dark composite slats) */}
-        <mesh receiveShadow>
-          <boxGeometry args={[1.3, 0.06, 2.4]} />
-          <meshStandardMaterial color="#111622" roughness={0.7} metalness={0.2} />
-        </mesh>
-        {/* Minimalist Glass Balustrade / Railing */}
-        <mesh position={[-0.62, 0.45, 0]}>
-          <boxGeometry args={[0.02, 0.85, 2.4]} />
-          <meshStandardMaterial
-            color="#38bdf8"
-            transparent
-            opacity={0.25}
-            roughness={0.1}
-            metalness={0.9}
-          />
-        </mesh>
-        {/* Railing Top Handrail */}
-        <mesh position={[-0.62, 0.88, 0]}>
-          <boxGeometry args={[0.04, 0.02, 2.4]} />
-          <meshStandardMaterial color="#334155" metalness={0.8} />
-        </mesh>
-        {/* Exterior Evening Terrace Ambient Lighting */}
-        <pointLight position={[0, 0.35, 0]} color="#38bdf8" intensity={1.2} distance={3.5} decay={2} />
-      </group>
-
-      {/* Right side wall (Kitchen side) */}
       <mesh position={[2.96, 1.1, -0.5]} castShadow receiveShadow>
         <boxGeometry args={[0.08, 2.2, 3]} />
         <meshStandardMaterial color={WALL_COLOR} roughness={0.45} metalness={0.2} envMapIntensity={1.2} />
@@ -527,11 +460,6 @@ export default function HomeScene({
           <IoTSensorBeacon position={[2.5, 1.45, -1.4]} label="Gas Sniffer" status={gasStatus} />
           <IoTSensorBeacon position={[1.0, 1.45, -1.4]} label="Hydro Probe" status={waterStatus} />
           <IoTSensorBeacon position={[-2.88, 1.7, 0.3]} label="Smart CT Sensor" status={electricityStatus} />
-
-          {/* Predictive Volumetric Scanning Cones (Visualizing pre-emptive hazard detection) */}
-          <PredictiveScanningCone position={[2.5, 1.43, -1.4]} status={gasStatus} height={0.5} radius={0.28} />
-          <PredictiveScanningCone position={[1.0, 1.43, -1.4]} status={waterStatus} height={0.5} radius={0.28} />
-          <PredictiveScanningCone position={[-2.88, 1.68, 0.3]} status={electricityStatus} height={0.68} radius={0.32} />
 
           {/* Glowing Utility Flow Conduits */}
           <GlowingConduitPath position={[2.55, 0.2, -1.45]} args={[0.3, 0.03, 0.03]} color="#f59e0b" status={gasStatus} />

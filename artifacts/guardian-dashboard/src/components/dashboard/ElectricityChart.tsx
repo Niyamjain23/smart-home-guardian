@@ -38,7 +38,7 @@ export default function ElectricityChart() {
           </div>
           <div>
             <h3 className="text-xs font-semibold text-foreground/90 tracking-wide">Live Load Telemetry</h3>
-            <span className="text-[10px] text-muted-foreground">Rolling 60-Second Realtime Window</span>
+            <span className="text-[10px] text-muted-foreground">Rolling 60-Second Window</span>
           </div>
         </div>
 

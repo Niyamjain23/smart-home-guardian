@@ -75,7 +75,6 @@ function StatusTile({
           </div>
           <div>
             <h3 className="text-xs font-semibold text-foreground/90 tracking-wide">{title}</h3>
-            <span className="text-[10px] text-muted-foreground uppercase font-mono">Real-time</span>
           </div>
         </div>
 
