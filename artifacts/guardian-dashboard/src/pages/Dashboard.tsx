@@ -3,17 +3,14 @@ import {
   Activity,
   Sliders,
   Sparkles,
-  BarChart3,
   X,
   ShieldAlert,
   Flame,
   Droplets,
   Zap,
   ChevronDown,
-  Layers,
 } from 'lucide-react';
 import Header from '@/components/dashboard/Header';
-import StatusGrid from '@/components/dashboard/StatusGrid';
 import EnvironmentTiles from '@/components/dashboard/EnvironmentTiles';
 import ElectricityChart from '@/components/dashboard/ElectricityChart';
 import HomeControlsHub from '@/components/dashboard/HomeControlsHub';
@@ -22,7 +19,7 @@ import HomeScene from '@/components/scene/HomeScene';
 import { useGuardianStore } from '@/lib/guardian-state';
 import { motion, AnimatePresence } from 'framer-motion';
 
-type ActivePanel = 'vitals' | 'chart' | 'controls' | 'lab' | null;
+type ActivePanel = 'chart' | 'controls' | 'lab' | null;
 
 export default function Dashboard() {
   const [activePanel, setActivePanel] = useState<ActivePanel>(null);
@@ -179,7 +176,6 @@ export default function Dashboard() {
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
                   <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground font-mono">
-                    {activePanel === 'vitals' && 'Vitals'}
                     {activePanel === 'chart' && 'Power'}
                     {activePanel === 'controls' && 'Controls'}
                     {activePanel === 'lab' && 'Scenarios'}
@@ -196,14 +192,6 @@ export default function Dashboard() {
 
               {/* Panel Content (Scrollable) */}
               <div className="p-4 sm:p-5 overflow-y-auto custom-scrollbar flex flex-col gap-4">
-                {activePanel === 'vitals' && (
-                  <>
-                    <StatusGrid />
-                    <div className="pt-2">
-                      <EnvironmentTiles />
-                    </div>
-                  </>
-                )}
                 {activePanel === 'chart' && <ElectricityChart />}
                 {activePanel === 'controls' && <HomeControlsHub />}
                 {activePanel === 'lab' && <DeveloperSettings />}
@@ -220,14 +208,6 @@ export default function Dashboard() {
           animate={{ y: 0, opacity: 1 }}
           className="flex items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-2xl border border-white/15 bg-zinc-950/65 backdrop-blur-2xl shadow-[0_12px_40px_rgba(0,0,0,0.6)]"
         >
-          {/* Vitals Tab */}
-          <DockItem
-            label="Vitals"
-            icon={BarChart3}
-            active={activePanel === 'vitals'}
-            onClick={() => togglePanel('vitals')}
-          />
-
           {/* Power Chart Tab */}
           <DockItem
             label="Power"
