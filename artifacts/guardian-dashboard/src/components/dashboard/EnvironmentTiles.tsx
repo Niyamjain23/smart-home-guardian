@@ -34,7 +34,7 @@ function EnvTile({
   tone,
 }: {
   title: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   value: string;
   unit: string;
   badge: string;

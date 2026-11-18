@@ -36,9 +36,9 @@ export default function Header() {
             >
               <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
               <span className="hidden sm:inline text-xs md:text-sm font-mono tracking-wider uppercase">
-                All Systems Nominal
+                All Normal
               </span>
-              <span className="sm:hidden text-xs font-mono uppercase">Nominal</span>
+              <span className="sm:hidden text-xs font-mono uppercase">Normal</span>
             </motion.div>
           ) : (
             <motion.div

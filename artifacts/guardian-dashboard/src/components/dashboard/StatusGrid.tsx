@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGuardianStore, SystemStatus } from '@/lib/guardian-state';
-import { Flame, Droplets, Zap, ShieldAlert, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { Flame, Droplets, Zap, ShieldAlert, ShieldCheck } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -19,8 +19,6 @@ const StatusBg = {
   Critical: 'bg-destructive/10 border-destructive/20',
 };
 
-const ATEX_SPEC = 'Actuator: ATEX Ex ia Certified Intrinsically Safe Solenoid Valve (UL 913 / NFPA 54 Zone 1 Compliant)';
-
 function StatusTile({ 
   title, 
   icon: Icon, 
@@ -28,7 +26,6 @@ function StatusTile({
   reading, 
   unit, 
   type,
-  showAtex,
 }: { 
   title: string; 
   icon: React.ComponentType<{ className?: string }>; 
@@ -36,7 +33,6 @@ function StatusTile({
   reading: number; 
   unit: string;
   type: 'gas' | 'water' | 'electricity';
-  showAtex?: boolean;
 }) {
   const resetSystem = useGuardianStore(s => s.resetSystem);
   const colorClass = StatusColors[status];
@@ -63,35 +59,25 @@ function StatusTile({
           
           <div className="h-6 flex items-center">
             <AnimatePresence mode="wait">
-              <motion.div
-                key={status}
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -5 }}
-                className={`text-sm font-medium ${colorClass} flex items-center gap-1.5`}
-              >
-                {status === 'Safe' && <CheckCircle2 className="w-4 h-4" />}
-                {status === 'Warning' && <ShieldAlert className="w-4 h-4 animate-pulse" />}
-                {status === 'Prevented' && <ShieldCheck className="w-4 h-4" />}
-                <span>
-                  {status === 'Safe' ? 'System Normal' : 
-                   status === 'Warning' ? 'Analyzing Pattern...' : 
-                   status === 'Prevented' ? 'MITIGATED' : 'CRITICAL'}
-                </span>
-              </motion.div>
+              {status !== 'Safe' && (
+                <motion.div
+                  key={status}
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -5 }}
+                  className={`text-sm font-medium ${colorClass} flex items-center gap-1.5`}
+                >
+                  {status === 'Warning' && <ShieldAlert className="w-4 h-4 animate-pulse" />}
+                  {status === 'Prevented' && <ShieldCheck className="w-4 h-4" />}
+                  <span>
+                    {status === 'Warning' ? 'Analyzing Pattern...' : 
+                     status === 'Prevented' ? 'MITIGATED' : 'CRITICAL'}
+                  </span>
+                </motion.div>
+              )}
             </AnimatePresence>
           </div>
         </div>
-
-        {/* ATEX compliance spec — shown on gas card */}
-        {showAtex && (
-          <div className="flex items-start gap-1.5 p-2 rounded bg-emerald-500/8 border border-emerald-500/20">
-            <ShieldCheck className="w-3 h-3 text-emerald-400 mt-0.5 shrink-0" />
-            <span className="text-[9px] font-mono leading-snug text-emerald-400/90 tracking-wide">
-              {ATEX_SPEC}
-            </span>
-          </div>
-        )}
 
         <AnimatePresence>
           {status === 'Prevented' && (
@@ -129,7 +115,6 @@ export default function StatusGrid() {
         reading={gasReading} 
         unit="ppm" 
         type="gas"
-        showAtex
       />
       <StatusTile 
         title="Water Main" 

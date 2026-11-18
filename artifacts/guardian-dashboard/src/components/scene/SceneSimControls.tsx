@@ -7,7 +7,7 @@ type SimMode = 'smart' | 'bypassed';
 interface RowProps {
   type: UtilityType;
   label: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   status: SystemStatus;
   mode: SimMode;
 }

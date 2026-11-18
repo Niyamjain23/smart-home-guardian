@@ -4,7 +4,7 @@ import { Switch } from '@/components/ui/switch';
 import { Microwave, Wind, WashingMachine, Flame } from 'lucide-react';
 import { useGuardianStore, APPLIANCES, ApplianceKey } from '@/lib/guardian-state';
 
-const ICONS: Record<ApplianceKey, React.ElementType> = {
+const ICONS: Record<ApplianceKey, React.ComponentType<{ className?: string }>> = {
   microwave: Microwave,
   ac: Wind,
   dishwasher: WashingMachine,

@@ -13,7 +13,7 @@ interface SimRowProps {
   type: UtilityType;
   label: string;
   cmd: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   status: SystemStatus;
 }
 

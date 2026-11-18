@@ -139,19 +139,6 @@ export default function GasValve({ position }: { position: [number, number, numb
       >
         {isCritical ? 'GAS LEAK' : 'Gas Valve'}
       </Text>
-      <Text
-        position={[0, 0.40, 0]}
-        fontSize={0.045}
-        color={isCritical ? '#fca5a5' : '#6ee7b7'}
-        outlineWidth={0.003}
-        outlineColor="#000"
-        anchorX="center"
-        anchorY="middle"
-        maxWidth={1.2}
-        textAlign="center"
-      >
-        {`ATEX Ex ia | UL 913 / NFPA 54`}
-      </Text>
 
       {/* Disaster cloud */}
       {isCritical && disasterStart != null && <GasCloud start={disasterStart} />}
