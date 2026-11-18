@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "pnpm --filter @workspace/guardian-dashboard run build",
-  "outputDirectory": "artifacts/guardian-dashboard/dist",
+  "buildCommand": "pnpm run build",
+  "outputDirectory": "dist",
   "cleanUrls": true,
   "rewrites": [
     {

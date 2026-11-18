@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "pnpm --filter @workspace/guardian-dashboard run dev",
-    "build": "pnpm --filter @workspace/guardian-dashboard run build",
+    "build": "pnpm --filter @workspace/guardian-dashboard run build && node -e \"const fs=require('fs'); fs.cpSync('artifacts/guardian-dashboard/dist', 'dist', {recursive:true});\"",
     "build:all": "pnpm -r --if-present run build",
     "preview": "pnpm --filter @workspace/guardian-dashboard run serve",
     "typecheck": "pnpm --filter @workspace/guardian-dashboard run typecheck"
