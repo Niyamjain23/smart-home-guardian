@@ -47,58 +47,45 @@ export default function HomeControlsHub() {
   );
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-zinc-900/40 backdrop-blur-xl p-4.5 shrink-0 flex flex-col gap-4 group hover:border-white/15 transition-all">
+    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-zinc-900/40 backdrop-blur-xl p-4 shrink-0 flex flex-col gap-4 group hover:border-white/15 transition-all">
       {/* Glare highlight */}
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
-      {/* Hub Header & Segmented Pill Switcher */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
-            <Sliders className="w-4 h-4 text-cyan-400" />
-          </div>
-          <div>
-            <h3 className="text-xs font-semibold text-foreground/90 tracking-wide">Device & Utility Hub</h3>
-            <span className="text-[10px] text-muted-foreground">Interactive Control Center</span>
-          </div>
-        </div>
-
-        {/* Segmented Pills */}
-        <div className="flex items-center p-1 rounded-xl bg-black/40 border border-white/10 self-start sm:self-auto">
-          <button
-            onClick={() => setActiveTab('utilities')}
-            className={`px-3 py-1 text-xs font-medium rounded-lg transition-all ${
-              activeTab === 'utilities'
-                ? 'bg-white/15 text-white shadow-sm'
-                : 'text-muted-foreground hover:text-white'
-            }`}
-          >
-            Utilities
-          </button>
-          <button
-            onClick={() => setActiveTab('lighting')}
-            className={`px-3 py-1 text-xs font-medium rounded-lg transition-all ${
-              activeTab === 'lighting'
-                ? 'bg-white/15 text-white shadow-sm'
-                : 'text-muted-foreground hover:text-white'
-            }`}
-          >
-            Lighting
-          </button>
-          <button
-            onClick={() => setActiveTab('appliances')}
-            className={`px-3 py-1 text-xs font-medium rounded-lg transition-all flex items-center gap-1.5 ${
-              activeTab === 'appliances'
-                ? 'bg-white/15 text-white shadow-sm'
-                : 'text-muted-foreground hover:text-white'
-            }`}
-          >
-            <span>Appliances</span>
-            {totalApplianceWatts > 0 && (
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            )}
-          </button>
-        </div>
+      {/* Segmented Pills */}
+      <div className="flex items-center p-1 rounded-2xl bg-black/40 border border-white/10 self-start">
+        <button
+          onClick={() => setActiveTab('utilities')}
+          className={`px-3.5 py-1.5 text-xs font-medium rounded-xl transition-all cursor-pointer ${
+            activeTab === 'utilities'
+              ? 'bg-white/15 text-white shadow-sm'
+              : 'text-muted-foreground hover:text-white'
+          }`}
+        >
+          Utilities
+        </button>
+        <button
+          onClick={() => setActiveTab('lighting')}
+          className={`px-3.5 py-1.5 text-xs font-medium rounded-xl transition-all cursor-pointer ${
+            activeTab === 'lighting'
+              ? 'bg-white/15 text-white shadow-sm'
+              : 'text-muted-foreground hover:text-white'
+          }`}
+        >
+          Lighting
+        </button>
+        <button
+          onClick={() => setActiveTab('appliances')}
+          className={`px-3.5 py-1.5 text-xs font-medium rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
+            activeTab === 'appliances'
+              ? 'bg-white/15 text-white shadow-sm'
+              : 'text-muted-foreground hover:text-white'
+          }`}
+        >
+          <span>Appliances</span>
+          {totalApplianceWatts > 0 && (
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          )}
+        </button>
       </div>
 
       {/* Tab Panels */}
@@ -114,7 +101,7 @@ export default function HomeControlsHub() {
           >
             {/* Gas */}
             <UtilityRow
-              title="Gas Supply"
+              title="Gas"
               icon={Flame}
               iconColor="text-amber-400"
               enabled={!manualOff.gas}
@@ -122,7 +109,7 @@ export default function HomeControlsHub() {
             />
             {/* Water */}
             <UtilityRow
-              title="Water Main"
+              title="Water"
               icon={Droplets}
               iconColor="text-cyan-400"
               enabled={!manualOff.water}
@@ -130,7 +117,7 @@ export default function HomeControlsHub() {
             />
             {/* Electricity */}
             <UtilityRow
-              title="Grid Breaker"
+              title="Power"
               icon={Zap}
               iconColor="text-emerald-400"
               enabled={!manualOff.electricity}
@@ -150,13 +137,13 @@ export default function HomeControlsHub() {
             className="grid grid-cols-1 sm:grid-cols-2 gap-2.5"
           >
             <LightRow
-              label="Living Room Light"
+              label="Living Room"
               isOn={lights.livingRoom && !isPowerIsolated}
               disabled={isPowerIsolated}
               onToggle={() => toggleLight('livingRoom')}
             />
             <LightRow
-              label="Kitchen Light"
+              label="Kitchen"
               isOn={lights.kitchen && !isPowerIsolated}
               disabled={isPowerIsolated}
               onToggle={() => toggleLight('kitchen')}

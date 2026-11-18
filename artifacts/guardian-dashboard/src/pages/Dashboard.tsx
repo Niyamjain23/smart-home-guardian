@@ -179,10 +179,10 @@ export default function Dashboard() {
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
                   <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground font-mono">
-                    {activePanel === 'vitals' && 'Telemetry Gauges & Vitals'}
-                    {activePanel === 'chart' && 'Power Consumption'}
-                    {activePanel === 'controls' && 'Device & Utility Control Hub'}
-                    {activePanel === 'lab' && 'Interactive Scenario Lab'}
+                    {activePanel === 'vitals' && 'Vitals'}
+                    {activePanel === 'chart' && 'Power'}
+                    {activePanel === 'controls' && 'Controls'}
+                    {activePanel === 'lab' && 'Scenarios'}
                   </span>
                 </div>
                 <button
@@ -230,7 +230,7 @@ export default function Dashboard() {
 
           {/* Power Chart Tab */}
           <DockItem
-            label="Load Chart"
+            label="Power"
             icon={Activity}
             active={activePanel === 'chart'}
             onClick={() => togglePanel('chart')}
@@ -246,7 +246,7 @@ export default function Dashboard() {
 
           {/* Scenario Lab Tab */}
           <DockItem
-            label="Scenario Lab"
+            label="Scenarios"
             icon={Sparkles}
             active={activePanel === 'lab'}
             onClick={() => togglePanel('lab')}

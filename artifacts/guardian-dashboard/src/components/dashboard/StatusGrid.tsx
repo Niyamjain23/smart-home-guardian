@@ -106,13 +106,9 @@ function StatusTile({
         </div>
       </div>
 
-      {/* Micro Safety Level Gauge */}
-      <div className="mt-3 space-y-1.5">
-        <div className="flex items-center justify-between text-[10px] text-muted-foreground font-mono">
-          <span>Safety Gauge</span>
-          <span>{pct.toFixed(0)}%</span>
-        </div>
-        <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden p-0.5">
+      {/* Level Indicator */}
+      <div className="mt-3">
+        <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
           <div
             className={`h-full rounded-full transition-all duration-300 ${
               isCritical
@@ -158,7 +154,7 @@ export default function StatusGrid() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-3 shrink-0">
       <StatusTile
-        title="Gas Pressure"
+        title="Gas"
         icon={Flame}
         status={gasStatus}
         reading={gasReading}
@@ -166,7 +162,7 @@ export default function StatusGrid() {
         type="gas"
       />
       <StatusTile
-        title="Water Flow"
+        title="Water"
         icon={Droplets}
         status={waterStatus}
         reading={waterReading}
@@ -174,7 +170,7 @@ export default function StatusGrid() {
         type="water"
       />
       <StatusTile
-        title="Power Draw"
+        title="Power"
         icon={Zap}
         status={electricityStatus}
         reading={electricityReading}
