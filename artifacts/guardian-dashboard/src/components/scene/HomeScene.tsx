@@ -34,10 +34,10 @@ function KitchenIslandKickLight() {
   const intensity = isPowered ? Math.min(2.5, 0.5 + electricityReading * 0.35) : 0;
 
   return (
-    <group position={[1.55, 0.03, -1.14]}>
+    <group position={[1.7, 0.03, -1.13]}>
       {/* LED Channel Line */}
       <mesh>
-        <boxGeometry args={[2.2, 0.02, 0.015]} />
+        <boxGeometry args={[2.5, 0.02, 0.015]} />
         <meshStandardMaterial
           color="#38bdf8"
           emissive="#38bdf8"
@@ -133,18 +133,18 @@ function Furniture() {
         <meshBasicMaterial color="#06b6d4" transparent opacity={0.35} />
       </mesh>
 
-      {/* Kitchen counter */}
-      <group position={[1.55, 0.45, -1.4]}>
+      {/* Kitchen counter / table (runs flush against the right side wall, no gap) */}
+      <group position={[1.7, 0.45, -1.4]}>
         <mesh castShadow receiveShadow>
-          <boxGeometry args={[2.2, 0.9, 0.5]} />
+          <boxGeometry args={[2.5, 0.9, 0.55]} />
           <meshStandardMaterial color="#f4f4f6" roughness={0.5} />
         </mesh>
         <mesh position={[0, 0.46, 0]} castShadow>
-          <boxGeometry args={[2.25, 0.04, 0.55]} />
+          <boxGeometry args={[2.54, 0.04, 0.58]} />
           <meshStandardMaterial color="#1a1a1e" roughness={0.25} metalness={0.3} />
         </mesh>
-        {[-0.7, 0, 0.7].map((x) => (
-          <mesh key={x} position={[x, 0, 0.26]}>
+        {[-0.8, -0.3, 0.2, 0.7].map((x) => (
+          <mesh key={x} position={[x, 0, 0.28]}>
             <boxGeometry args={[0.01, 0.85, 0.01]} />
             <meshStandardMaterial color="#c2c2c8" />
           </mesh>
@@ -154,15 +154,15 @@ function Furniture() {
       {/* Under-cabinet island kick light */}
       <KitchenIslandKickLight />
 
-      {/* Stove */}
-      <group position={[2.5, 0.95, -1.4]}>
+      {/* Stove (Solidly seated on the counter, zero overhang) */}
+      <group position={[2.35, 0.94, -1.4]}>
         <mesh castShadow>
-          <boxGeometry args={[0.6, 0.05, 0.5]} />
+          <boxGeometry args={[0.62, 0.03, 0.48]} />
           <meshStandardMaterial color="#1a1a1e" roughness={0.35} metalness={0.6} />
         </mesh>
         {[-0.15, 0.15].map((x) =>
           [-0.12, 0.12].map((z) => (
-            <mesh key={`${x}-${z}`} position={[x, 0.03, z]}>
+            <mesh key={`${x}-${z}`} position={[x, 0.02, z]}>
               <torusGeometry args={[0.06, 0.012, 12, 24]} />
               <meshStandardMaterial color="#3a3a40" metalness={0.7} roughness={0.3} />
             </mesh>
@@ -170,20 +170,43 @@ function Furniture() {
         )}
       </group>
 
-      {/* Dining table */}
-      <group position={[1.0, 0.36, 0.6]}>
-        <mesh castShadow>
-          <cylinderGeometry args={[0.45, 0.45, 0.04, 32]} />
-          <meshStandardMaterial color="#e8e8ec" roughness={0.5} />
+      {/* Modern Minimalist Dining Table & Chairs */}
+      <group position={[1.1, 0, 0.6]}>
+        {/* Table Top */}
+        <mesh position={[0, 0.38, 0]} castShadow receiveShadow>
+          <boxGeometry args={[0.95, 0.035, 0.65]} />
+          <meshStandardMaterial color="#1e2430" roughness={0.4} metalness={0.2} />
         </mesh>
-        <mesh position={[0, -0.18, 0]} castShadow>
-          <cylinderGeometry args={[0.05, 0.07, 0.36, 16]} />
-          <meshStandardMaterial color="#2c2c30" />
-        </mesh>
-        <mesh position={[0, -0.36, 0]} castShadow>
-          <cylinderGeometry args={[0.25, 0.25, 0.03, 24]} />
-          <meshStandardMaterial color="#2c2c30" />
-        </mesh>
+        {/* Four Slender Steel Legs */}
+        {[-0.42, 0.42].map((x) =>
+          [-0.27, 0.27].map((z) => (
+            <mesh key={`dl-${x}-${z}`} position={[x, 0.19, z]} castShadow>
+              <cylinderGeometry args={[0.015, 0.012, 0.38, 12]} />
+              <meshStandardMaterial color="#0f131a" metalness={0.8} />
+            </mesh>
+          ))
+        )}
+        {/* Modern Dining Chairs */}
+        <group position={[0, 0.22, 0.42]}>
+          <mesh castShadow>
+            <boxGeometry args={[0.42, 0.04, 0.28]} />
+            <meshStandardMaterial color="#2d3748" roughness={0.8} />
+          </mesh>
+          <mesh position={[0, 0.18, 0.12]} castShadow>
+            <boxGeometry args={[0.42, 0.32, 0.03]} />
+            <meshStandardMaterial color="#2d3748" roughness={0.8} />
+          </mesh>
+        </group>
+        <group position={[0, 0.22, -0.42]}>
+          <mesh castShadow>
+            <boxGeometry args={[0.42, 0.04, 0.28]} />
+            <meshStandardMaterial color="#2d3748" roughness={0.8} />
+          </mesh>
+          <mesh position={[0, 0.18, -0.12]} castShadow>
+            <boxGeometry args={[0.42, 0.32, 0.03]} />
+            <meshStandardMaterial color="#2d3748" roughness={0.8} />
+          </mesh>
+        </group>
       </group>
 
       {/* Plant */}
@@ -310,6 +333,15 @@ export default function HomeScene({
   const electricityStatus = useGuardianStore((s) => s.electricityStatus);
   const [showHouse, setShowHouse] = useState(true);
   const [autoRotate, setAutoRotate] = useState(true);
+  const [hoveredUtility, setHoveredUtility] = useState<{
+    gas: boolean;
+    water: boolean;
+    electricity: boolean;
+  }>({
+    gas: false,
+    water: false,
+    electricity: false,
+  });
   const controlsRef = useRef<OrbitControlsLike | null>(null);
 
   // Detect mobile/small screens once per render to scale graphics quality
@@ -444,40 +476,47 @@ export default function HomeScene({
           <ElectricalPanel
             position={[-2.9, 1.0, 0.3]}
             onSelect={() => onSelectUtility?.('electricity')}
+            onHoverChange={(h) => setHoveredUtility((p) => ({ ...p, electricity: h }))}
           />
 
           <RoomLightFixture position={[1.5, 1.95, 0]} room="kitchen" />
           <GasValve
-            position={[2.6, 1.05, -1.45]}
+            position={[2.35, 1.05, -1.45]}
             onSelect={() => onSelectUtility?.('gas')}
+            onHoverChange={(h) => setHoveredUtility((p) => ({ ...p, gas: h }))}
           />
           <WaterMain
             position={[1.0, 1.05, -1.45]}
             onSelect={() => onSelectUtility?.('water')}
+            onHoverChange={(h) => setHoveredUtility((p) => ({ ...p, water: h }))}
           />
 
           {/* Smart IoT Beacons with Interactive Hover / Reveal Popups */}
           <IoTSensorBeacon
-            position={[2.5, 1.45, -1.4]}
+            position={[2.35, 1.45, -1.4]}
             label="Gas Sensor"
             status={gasStatus}
+            isHoveredExternal={hoveredUtility.gas}
             onSelect={() => onSelectUtility?.('gas')}
           />
           <IoTSensorBeacon
             position={[1.0, 1.45, -1.4]}
             label="Water Sensor"
             status={waterStatus}
+            isHoveredExternal={hoveredUtility.water}
             onSelect={() => onSelectUtility?.('water')}
           />
           <IoTSensorBeacon
-            position={[-2.88, 1.7, 0.3]}
+            position={[-2.88, 1.6, 0.3]}
             label="Power Sensor"
             status={electricityStatus}
+            isHoveredExternal={hoveredUtility.electricity}
+            calloutOffset={[0.08, 0.05, 0]}
             onSelect={() => onSelectUtility?.('electricity')}
           />
 
           {/* Glowing Utility Flow Conduits */}
-          <GlowingConduitPath position={[2.55, 0.2, -1.45]} args={[0.3, 0.03, 0.03]} color="#f59e0b" status={gasStatus} />
+          <GlowingConduitPath position={[2.35, 0.2, -1.45]} args={[0.3, 0.03, 0.03]} color="#f59e0b" status={gasStatus} />
           <GlowingConduitPath position={[1.0, 0.2, -1.35]} args={[0.03, 0.03, 0.35]} color="#06b6d4" status={waterStatus} />
           <GlowingConduitPath position={[-2.88, 0.05, 0.3]} args={[0.02, 0.02, 0.8]} color="#10b981" status={electricityStatus} />
 

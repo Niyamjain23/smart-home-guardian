@@ -110,9 +110,11 @@ function SmokeCloud() {
 export default function ElectricalPanel({
   position,
   onSelect,
+  onHoverChange,
 }: {
   position: [number, number, number];
   onSelect?: () => void;
+  onHoverChange?: (hovered: boolean) => void;
 }) {
   const status = useGuardianStore((s) => s.electricityStatus);
   const manualOff = useGuardianStore((s) => s.manualOff.electricity);
@@ -160,8 +162,12 @@ export default function ElectricalPanel({
       onPointerOver={(e) => {
         e.stopPropagation();
         setHovered(true);
+        onHoverChange?.(true);
       }}
-      onPointerOut={() => setHovered(false)}
+      onPointerOut={() => {
+        setHovered(false);
+        onHoverChange?.(false);
+      }}
     >
       {/* Sonar Sensor Scanning Ring on floor */}
       <DetectionSonarRings position={[0, -0.99, 0]} status={status} radius={0.7} />

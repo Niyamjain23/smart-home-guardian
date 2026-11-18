@@ -168,14 +168,25 @@ export function IoTSensorBeacon({
   position,
   label,
   status,
+  isHoveredExternal = false,
+  calloutOffset = [0, 0.04, 0],
   onSelect,
 }: {
   position: [number, number, number];
   label: string;
   status: SystemStatus;
+  isHoveredExternal?: boolean;
+  calloutOffset?: [number, number, number];
   onSelect?: () => void;
 }) {
   const [revealed, setRevealed] = useState(false);
+
+  React.useEffect(() => {
+    if (isHoveredExternal) {
+      setRevealed(true);
+    }
+  }, [isHoveredExternal]);
+
   const isWarning = status === 'Warning';
   const isPrevented = status === 'Prevented';
   const isCritical = status === 'Critical';
@@ -205,6 +216,26 @@ export function IoTSensorBeacon({
         onSelect?.();
       }}
     >
+      {/* Generous Invisible Hover & Click Hit Shield (Radius 0.45 = 45cm) */}
+      <mesh
+        onPointerOver={(e) => {
+          e.stopPropagation();
+          setRevealed(true);
+          document.body.style.cursor = 'pointer';
+        }}
+        onPointerOut={() => {
+          document.body.style.cursor = 'auto';
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+          setRevealed(true);
+          onSelect?.();
+        }}
+      >
+        <sphereGeometry args={[0.45, 16, 16]} />
+        <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+      </mesh>
+
       {/* Clean Minimalist Sensor Puck — no green ring, no obstruction */}
       <mesh castShadow>
         <cylinderGeometry args={[0.045, 0.045, 0.018, 24]} />
@@ -219,7 +250,7 @@ export function IoTSensorBeacon({
 
       {/* Interactive 3D Spatial Callout: Line extends up, small box opens on top and stays */}
       <Html
-        position={[0, 0.02, 0]}
+        position={calloutOffset}
         center
         distanceFactor={7}
         zIndexRange={[100, 0]}

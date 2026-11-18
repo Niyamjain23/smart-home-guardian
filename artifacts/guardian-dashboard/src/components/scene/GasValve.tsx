@@ -62,9 +62,11 @@ function GasCloud({ start }: { start: number }) {
 export default function GasValve({
   position,
   onSelect,
+  onHoverChange,
 }: {
   position: [number, number, number];
   onSelect?: () => void;
+  onHoverChange?: (hovered: boolean) => void;
 }) {
   const status = useGuardianStore((s) => s.gasStatus);
   const manualOff = useGuardianStore((s) => s.manualOff.gas);
@@ -100,8 +102,12 @@ export default function GasValve({
       onPointerOver={(e) => {
         e.stopPropagation();
         setHovered(true);
+        onHoverChange?.(true);
       }}
-      onPointerOut={() => setHovered(false)}
+      onPointerOut={() => {
+        setHovered(false);
+        onHoverChange?.(false);
+      }}
     >
       {/* AI Sensor Active Scanning Sonar Rings */}
       <DetectionSonarRings position={[0, -0.4, 0]} status={status} radius={0.65} />

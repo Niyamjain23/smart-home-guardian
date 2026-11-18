@@ -72,9 +72,11 @@ function FloodSpray() {
 export default function WaterMain({
   position,
   onSelect,
+  onHoverChange,
 }: {
   position: [number, number, number];
   onSelect?: () => void;
+  onHoverChange?: (hovered: boolean) => void;
 }) {
   const status = useGuardianStore((s) => s.waterStatus);
   const manualOff = useGuardianStore((s) => s.manualOff.water);
@@ -111,8 +113,12 @@ export default function WaterMain({
       onPointerOver={(e) => {
         e.stopPropagation();
         setHovered(true);
+        onHoverChange?.(true);
       }}
-      onPointerOut={() => setHovered(false)}
+      onPointerOut={() => {
+        setHovered(false);
+        onHoverChange?.(false);
+      }}
     >
       {/* Sensor Sonar Scanning Ring on floor */}
       <DetectionSonarRings position={[0, -1.04, 0.15]} status={status} radius={0.7} />
