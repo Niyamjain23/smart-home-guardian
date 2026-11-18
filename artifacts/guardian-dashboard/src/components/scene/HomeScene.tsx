@@ -456,10 +456,25 @@ export default function HomeScene({
             onSelect={() => onSelectUtility?.('water')}
           />
 
-          {/* Smart IoT Beacons */}
-          <IoTSensorBeacon position={[2.5, 1.45, -1.4]} label="Gas Sniffer" status={gasStatus} />
-          <IoTSensorBeacon position={[1.0, 1.45, -1.4]} label="Hydro Probe" status={waterStatus} />
-          <IoTSensorBeacon position={[-2.88, 1.7, 0.3]} label="Smart CT Sensor" status={electricityStatus} />
+          {/* Smart IoT Beacons with Interactive Hover / Reveal Popups */}
+          <IoTSensorBeacon
+            position={[2.5, 1.45, -1.4]}
+            label="Gas Sensor"
+            status={gasStatus}
+            onSelect={() => onSelectUtility?.('gas')}
+          />
+          <IoTSensorBeacon
+            position={[1.0, 1.45, -1.4]}
+            label="Water Sensor"
+            status={waterStatus}
+            onSelect={() => onSelectUtility?.('water')}
+          />
+          <IoTSensorBeacon
+            position={[-2.88, 1.7, 0.3]}
+            label="Power Sensor"
+            status={electricityStatus}
+            onSelect={() => onSelectUtility?.('electricity')}
+          />
 
           {/* Glowing Utility Flow Conduits */}
           <GlowingConduitPath position={[2.55, 0.2, -1.45]} args={[0.3, 0.03, 0.03]} color="#f59e0b" status={gasStatus} />

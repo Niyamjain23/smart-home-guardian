@@ -1,6 +1,5 @@
 import React, { useRef, useMemo } from 'react';
 import { useSpring, animated } from '@react-spring/three';
-import { Text } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useGuardianStore } from '@/lib/guardian-state';
@@ -225,18 +224,6 @@ export default function ElectricalPanel({
           toneMapped={false}
         />
       </mesh>
-
-      <Text
-        position={[0, 0.52, 0]}
-        fontSize={0.085}
-        color={isCritical ? '#fca5a5' : '#fff'}
-        outlineWidth={0.005}
-        outlineColor="#000"
-        anchorX="center"
-        anchorY="middle"
-      >
-        {isCritical ? 'ELECTRICAL FIRE' : 'Electrical Panel'}
-      </Text>
 
       {/* Proactive Safeguard Barrier when Prevented */}
       {isIsolated && (

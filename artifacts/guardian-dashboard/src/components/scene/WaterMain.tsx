@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import { useSpring, animated } from '@react-spring/three';
-import { Text } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useGuardianStore } from '@/lib/guardian-state';
@@ -196,18 +195,6 @@ export default function WaterMain({
           <meshStandardMaterial color="#b8c0c8" metalness={0.9} roughness={0.2} />
         </mesh>
       </animated.group>
-
-      <Text
-        position={[0, 0.4, 0]}
-        fontSize={0.09}
-        color={isCritical ? '#bfdbfe' : '#fff'}
-        outlineWidth={0.005}
-        outlineColor="#000"
-        anchorX="center"
-        anchorY="middle"
-      >
-        {isCritical ? 'WATER LEAK' : 'Water Main'}
-      </Text>
 
       {/* Proactive Safeguard Barrier when Prevented */}
       {status === 'Prevented' && (

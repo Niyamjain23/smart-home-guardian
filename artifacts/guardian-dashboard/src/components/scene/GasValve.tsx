@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import { useSpring, animated } from '@react-spring/three';
-import { Text } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useGuardianStore } from '@/lib/guardian-state';
@@ -158,18 +157,6 @@ export default function GasValve({
           <animated.meshStandardMaterial color={color as any} />
         </animated.mesh>
       </animated.group>
-
-      <Text
-        position={[0, 0.55, 0]}
-        fontSize={0.09}
-        color={isCritical ? '#fca5a5' : '#fff'}
-        outlineWidth={0.005}
-        outlineColor="#000"
-        anchorX="center"
-        anchorY="middle"
-      >
-        {isCritical ? 'GAS LEAK' : 'Gas Valve'}
-      </Text>
 
       {/* Proactive Safeguard Barrier when Prevented */}
       {status === 'Prevented' && (

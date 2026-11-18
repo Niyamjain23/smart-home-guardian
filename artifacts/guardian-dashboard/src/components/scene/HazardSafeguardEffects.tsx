@@ -1,6 +1,7 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Text } from '@react-three/drei';
+import { Text, Html } from '@react-three/drei';
+import { motion, AnimatePresence } from 'framer-motion';
 import * as THREE from 'three';
 import { SystemStatus } from '@/lib/guardian-state';
 
@@ -161,22 +162,25 @@ export function InterceptionBarrier({
 
 
 /**
- * Smart IoT Sensor Puck mounted on walls/counters
+ * Smart IoT Sensor Puck with interactive hover-reveal line and glass popup box
  */
 export function IoTSensorBeacon({
   position,
   label,
   status,
+  onSelect,
 }: {
   position: [number, number, number];
   label: string;
   status: SystemStatus;
+  onSelect?: () => void;
 }) {
+  const [revealed, setRevealed] = useState(false);
   const isWarning = status === 'Warning';
   const isPrevented = status === 'Prevented';
   const isCritical = status === 'Critical';
 
-  const ledColor = isCritical
+  const statusColor = isCritical
     ? '#ef4444'
     : isWarning
     ? '#f59e0b'
@@ -185,31 +189,98 @@ export function IoTSensorBeacon({
     : '#10b981';
 
   return (
-    <group position={position}>
-      {/* Puck Body */}
+    <group
+      position={position}
+      onPointerOver={(e) => {
+        e.stopPropagation();
+        setRevealed(true);
+        document.body.style.cursor = 'pointer';
+      }}
+      onPointerOut={() => {
+        document.body.style.cursor = 'auto';
+      }}
+      onClick={(e) => {
+        e.stopPropagation();
+        setRevealed(true);
+        onSelect?.();
+      }}
+    >
+      {/* Clean Minimalist Sensor Puck — no green ring, no obstruction */}
       <mesh castShadow>
-        <cylinderGeometry args={[0.07, 0.07, 0.03, 24]} />
-        <meshStandardMaterial color="#1e2430" metalness={0.7} roughness={0.3} />
+        <cylinderGeometry args={[0.045, 0.045, 0.018, 24]} />
+        <meshStandardMaterial color="#1e2430" metalness={0.8} roughness={0.3} />
       </mesh>
 
-      {/* Active LED Halo Ring */}
-      <mesh position={[0, 0.016, 0]}>
-        <ringGeometry args={[0.045, 0.065, 24]} />
-        <meshBasicMaterial color={ledColor} side={THREE.DoubleSide} />
+      {/* Tiny subtle micro-LED center dot */}
+      <mesh position={[0, 0.01, 0]}>
+        <circleGeometry args={[0.012, 16]} />
+        <meshBasicMaterial color={statusColor} />
       </mesh>
 
-      {/* Label */}
-      <Text
-        position={[0, 0.07, 0]}
-        fontSize={0.038}
-        color="#94a3b8"
-        outlineWidth={0.002}
-        outlineColor="#000"
-        anchorX="center"
-        anchorY="middle"
+      {/* Interactive 3D Spatial Callout: Line extends up, small box opens on top and stays */}
+      <Html
+        position={[0, 0.02, 0]}
+        center
+        distanceFactor={7}
+        zIndexRange={[100, 0]}
+        style={{ pointerEvents: 'auto' }}
       >
-        {label}
-      </Text>
+        <AnimatePresence>
+          {revealed && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              transition={{ type: 'spring', damping: 22, stiffness: 320 }}
+              className="flex flex-col items-center select-none pointer-events-auto cursor-pointer -translate-y-full pb-1"
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelect?.();
+              }}
+            >
+              {/* Small Glass Box */}
+              <motion.div
+                initial={{ scale: 0.85, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.06, duration: 0.16 }}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-white/20 bg-zinc-950/90 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.85)] text-white whitespace-nowrap hover:border-cyan-400/50 transition-colors group"
+              >
+                <span
+                  className="w-1.5 h-1.5 rounded-full shrink-0"
+                  style={{ backgroundColor: statusColor }}
+                />
+                <span className="text-[11px] font-semibold tracking-wide font-sans text-white/95">
+                  {label}
+                </span>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setRevealed(false);
+                  }}
+                  className="ml-1 w-3.5 h-3.5 rounded-full hover:bg-white/20 flex items-center justify-center text-muted-foreground hover:text-white transition-colors"
+                  title="Close"
+                >
+                  <span className="text-[10px] leading-none">×</span>
+                </button>
+              </motion.div>
+
+              {/* Animated Extending Leader Line */}
+              <motion.div
+                initial={{ scaleY: 0 }}
+                animate={{ scaleY: 1 }}
+                transition={{ duration: 0.18, ease: 'easeOut' }}
+                className="w-[1.5px] h-6 bg-gradient-to-t from-cyan-400 via-cyan-400/80 to-cyan-400/30 origin-bottom"
+              />
+
+              {/* Anchor Dot on Sensor */}
+              <div
+                className="w-1.5 h-1.5 rounded-full -mt-0.5 ring-2 ring-cyan-400/30 shrink-0"
+                style={{ backgroundColor: statusColor }}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </Html>
     </group>
   );
 }
