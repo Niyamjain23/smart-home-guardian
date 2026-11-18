@@ -162,15 +162,15 @@ export default function Dashboard() {
         )}
       </AnimatePresence>
 
-      {/* 5. Animated Floating Glass Drawer / Panel (Slides in at Bottom-Left & Stays) */}
+      {/* 5. Animated Floating Glass Drawer / Panel (Slides in at Bottom-Right & Stays) */}
       <AnimatePresence>
         {activePanel && (
-          <div className="absolute bottom-20 left-3 sm:left-6 z-30 pointer-events-auto w-[calc(100vw-24px)] sm:w-[480px] lg:w-[520px] max-h-[calc(100dvh-170px)]">
+          <div className="absolute bottom-20 right-3 sm:right-6 z-30 pointer-events-auto w-[calc(100vw-24px)] sm:w-[480px] lg:w-[520px] max-h-[calc(100dvh-170px)]">
             <motion.div
               key={activePanel}
-              initial={{ opacity: 0, x: -35, y: 15, scale: 0.96 }}
+              initial={{ opacity: 0, x: 35, y: 15, scale: 0.96 }}
               animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
-              exit={{ opacity: 0, x: -35, y: 15, scale: 0.96 }}
+              exit={{ opacity: 0, x: 35, y: 15, scale: 0.96 }}
               transition={{ type: 'spring', damping: 26, stiffness: 320 }}
               className="w-full max-h-[calc(100dvh-170px)] flex flex-col rounded-3xl border border-white/15 bg-zinc-950/80 backdrop-blur-3xl shadow-[0_20px_70px_rgba(0,0,0,0.85)] overflow-hidden"
             >

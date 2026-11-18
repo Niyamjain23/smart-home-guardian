@@ -411,9 +411,9 @@ export default function HomeScene({
         </button>
       </div>
 
-      {/* Camera control hint (Positioned above dock on right side, subtle) */}
+      {/* Camera control hint (Positioned on bottom-left, subtle) */}
       {!autoRotate && (
-        <div className="absolute bottom-20 right-4 sm:right-6 z-10 px-3 py-1.5 rounded-xl bg-zinc-950/70 border border-white/10 backdrop-blur-xl text-[10px] font-medium text-white/70 hidden sm:flex items-center gap-2.5 shadow-xl">
+        <div className="absolute bottom-20 left-4 sm:left-6 z-10 px-3 py-1.5 rounded-xl bg-zinc-950/70 border border-white/10 backdrop-blur-xl text-[10px] font-medium text-white/70 hidden sm:flex items-center gap-2.5 shadow-xl">
           <span>Drag: Orbit</span>
           <span className="text-white/20">|</span>
           <span>Right-click: Pan</span>
